@@ -16,12 +16,14 @@ def get_connection():
 # Config inicial da tabela do SQLite
 conn = get_connection()
 cursor = conn.cursor()
-cursor.execute("""CREATE TABLE IF NOT EXISTS unregistered_users (
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                username TEXT NOT NULL,
-                userid INTEGER NOT NULL UNIQUE,
-                admin INTEGER NOT NULL DEFAULT 0 CHECK (admin IN (0, 1)) -- Faz com que o valor seja apenas 0 ou 1, se tiver um valor diferente dá erro
-                )""")
+cursor.execute(
+    """CREATE TABLE IF NOT EXISTS unregistered_users (
+    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    userid INTEGER NOT NULL UNIQUE,
+    admin INTEGER NOT NULL DEFAULT 0 CHECK (admin IN (0, 1)) -- Faz com que o valor seja apenas 0 ou 1, se tiver um valor diferente dá erro
+    )"""
+)
 conn.commit()
 conn.close()
 
@@ -79,7 +81,7 @@ def resposta_botao(call: types.CallbackQuery):
                         call.from_user.id, "Pedindo permissão ao administrador..."
                     )
                     print(
-                        f'Novo pedido de cadastro, salvando no database e notificando o administrador {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+                        f"Novo pedido de cadastro, salvando no database e notificando o administrador {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
                     )
                     cursor.execute(
                         """INSERT INTO unregistered_users

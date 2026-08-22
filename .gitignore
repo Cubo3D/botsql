@@ -1,4 +1,6 @@
-venv/
+*venv/
+.ruff_cache/
+
 sqltest.py
 .env
 unregistered-users.db

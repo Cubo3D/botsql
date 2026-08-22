@@ -1,0 +1,20 @@
+[project]
+name = "botsql"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Wesley Xavier", email = "wesley.xvier@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "dotenv>=0.9.9",
+    "telebot>=0.0.5",
+]
+
+[project.scripts]
+botsql = "botsql:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
