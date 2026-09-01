@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
 
 
 class User(Base):
-    __tablename__ = "unregistered_users"
+    __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String(20), nullable=True)
     userid: Mapped[int] = mapped_column(Integer, unique=True, nullable=False)

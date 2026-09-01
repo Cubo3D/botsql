@@ -9,6 +9,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "alembic>=1.19.1",
     "dotenv>=0.9.9",
     "sqlalchemy>=2.0.52",
     "telebot>=0.0.5",
