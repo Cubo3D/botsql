@@ -3,6 +3,7 @@ from telebot import types
 from datetime import datetime
 from dotenv import load_dotenv
 from os import getenv
+from loguru import logger
 
 from services import create_user, get_user
 
@@ -12,7 +13,7 @@ load_dotenv()
 token = getenv("BOT_TOKEN")
 if not token:
     raise ValueError(
-        "BOT_TOKEN não encontrado no arquivo .env, você configurou o arquivo .env?"
+        "BOT_TOKEN not found in .env file, did you configure the .env file?"
     )
 
 bot = telebot.TeleBot(token)
@@ -25,15 +26,15 @@ def start(msg: types.Message):
     markup = types.InlineKeyboardMarkup()
 
     botton_yes = types.InlineKeyboardButton(
-        "Quero me cadastrar", callback_data="botton_yes"
+        "I want to register", callback_data="botton_yes"
     )
-    botton_no = types.InlineKeyboardButton("Não, obrigado", callback_data="botton_no")
+    botton_no = types.InlineKeyboardButton("No, thank you", callback_data="botton_no")
 
     markup.add(botton_yes, botton_no)
 
     bot.send_message(
         msg.chat.id,
-        "Olá bem-vindo ao BotSQL, esse bot serve para..., se quiser conversar com o bot você deve pedir autorização de cadastro",
+        "Hello, welcome to BotSQL, this bot is for..., if you want to chat with the bot you must request registration authorization",
         reply_markup=markup,
     )
 
@@ -49,19 +50,19 @@ def resposta_botao(call: types.CallbackQuery):
             if db_user:
                 bot.send_message(
                     call.from_user.id,
-                    "Opa! você já está na fila de espera, já notificamos o administrador, então basta apenas esperar",
+                    "Hey! You're already in the queue, we've already notified the administrator, just wait",
                 )
             else:
                 bot.send_message(
-                    call.from_user.id, "Pedindo permissão ao administrador..."
+                    call.from_user.id, "Requesting permission from the administrator..."
                 )
-                print(
-                    f"Novo pedido de cadastro, salvando no database e notificando o administrador {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
+                logger.info(
+                    f"New registration request, saving to database and notifying the administrator {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
                 )
                 create_user(user.username, user.id)
                 bot.send_message(
                     call.from_user.id,
-                    "pedido concluido, espere até que o administrador permita",
+                    "Request completed, wait until the administrator approves",
                 )
 
         case "botton_no":
@@ -69,11 +70,11 @@ def resposta_botao(call: types.CallbackQuery):
             if db_user:
                 bot.send_message(
                     call.from_user.id,
-                    "Você já está na fila de cadastrado, apenas espere que o administrador permita o teu cadastro. Se quiser cancelar o cadastro digite /cancel",
+                    "You're already in the registration queue, just wait for the administrator to approve your registration. If you want to cancel, type /cancel",
                 )
             else:
-                bot.send_message(call.from_user.id, "Certo, tenha um bom dia!")
+                bot.send_message(call.from_user.id, "Sure, have a good day!")
 
 
-print("Bot em execução")
+logger.info("Bot running")
 bot.infinity_polling()
