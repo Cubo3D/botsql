@@ -18,60 +18,60 @@ if not token:
 try:
     bot = telebot.TeleBot(token)
 
-    # Comando Start
+    # Start Command
 
     @bot.message_handler(["start"])
     def start(msg: types.Message):
 
         markup = types.InlineKeyboardMarkup()
 
-        botton_yes = types.InlineKeyboardButton(
-            "I want to register", callback_data="botton_yes"
+        button_yes = types.InlineKeyboardButton(
+            "I want to register", callback_data="button_yes"
         )
-        botton_no = types.InlineKeyboardButton(
-            "No, thank you", callback_data="botton_no")
+        button_no = types.InlineKeyboardButton(
+            "No, thank you", callback_data="button_no")
 
-        markup.add(botton_yes, botton_no)
+        markup.add(button_yes, button_no)
 
         bot.send_message(
             msg.chat.id,
-            "Hello, welcome to BotSQL! This bot is used for..., if you want to chat with the bot you must request registration authorization",
+            "Hello, welcome to BotSQL! This bot is used for... If you want to chat with the bot, you must request registration authorization.",
             reply_markup=markup,
         )
 
-    # Verificação dos botões
+    # Button Verification
 
     @bot.callback_query_handler()
-    def resposta_botao(call: types.CallbackQuery):
+    def button_response(call: types.CallbackQuery):
         user = call.from_user
 
         match call.data:
-            case "botton_yes":
+            case "button_yes":
                 db_user = get_user(user.id)
                 if db_user:
                     bot.send_message(
                         call.from_user.id,
-                        "Oops! You are already on the waiting list, we have already notified the administrator, so just wait",
+                        "Oops! You are already on the waiting list. We have already notified the administrator, so just wait.",
                     )
                 else:
                     bot.send_message(
                         call.from_user.id, "Requesting permission from the administrator..."
                     )
                     print(
-                        f"New registration request, saving to database and notifying the administrator {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
+                        f"New registration request, saving to database and notifying the administrator: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
                     )
                     create_user(user.username, user.id)
                     bot.send_message(
                         call.from_user.id,
-                        "Request completed, wait until the administrator approves",
+                        "Request completed. Wait until the administrator approves.",
                     )
 
-            case "botton_no":
+            case "button_no":
                 db_user = get_user(user.id)
                 if db_user:
                     bot.send_message(
                         call.from_user.id,
-                        "You are already on the registration waiting list, just wait for the administrator to approve your registration. If you want to cancel the registration, type /cancel",
+                        "You are already on the registration waiting list. Just wait for the administrator to approve your registration. If you want to cancel the registration, type /cancel",
                     )
                 else:
                     bot.send_message(call.from_user.id,
